@@ -20,9 +20,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      # - name: Lint
+      #   run: yarn lint
 
       - name: Run tests
-        run: npm test
+        run: yarn test
+
+      - name: Build the application
+        run: yarn build
+
+      - name: Add SPA fallback page
+        run: cp build/index.html build/404.html
 
       - name: Deploy the build folder to GitHub Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
